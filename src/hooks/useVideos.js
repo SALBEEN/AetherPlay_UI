@@ -13,12 +13,20 @@ const useVideos = (params = {}) => {
         setLoading(true);
         setError(null);
         const data = await videoService.getAllVideos(params);
-        const videoList = data?.data?.videos || data?.data || [];
-        const total = data?.data?.totalVideos || videoList.length;
-        setVideos(videoList);
-        setHasMore(videoList.length < total);
+
+        // Handle all possible response shapes
+        const videoList =
+          data?.data?.videos || data?.data?.videosList || data?.data || [];
+
+        // Make sure it's always an array
+        const safeList = Array.isArray(videoList) ? videoList : [];
+        const total = data?.data?.totalVideos || safeList.length;
+
+        setVideos(safeList);
+        setHasMore(safeList.length < total);
       } catch (err) {
         setError(err?.response?.data?.message || "Failed to load videos");
+        setVideos([]); // ← always set to empty array on error
       } finally {
         setLoading(false);
       }

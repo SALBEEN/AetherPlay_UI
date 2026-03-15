@@ -19,56 +19,63 @@ const VideoCard = ({ video }) => {
     return num;
   };
 
-  const formatDuration = (seconds) => {
-    if (!seconds) return "";
-    const m = Math.floor(seconds / 60);
-    const s = Math.floor(seconds % 60);
+  const formatDuration = (secs) => {
+    if (!secs) return "";
+    const h = Math.floor(secs / 3600);
+    const m = Math.floor((secs % 3600) / 60);
+    const s = Math.floor(secs % 60);
+    if (h > 0)
+      return `${h}:${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
     return `${m}:${s.toString().padStart(2, "0")}`;
   };
 
   return (
-    <div className="group flex flex-col gap-3 cursor-pointer">
+    <div className="group flex flex-col gap-3 w-full cursor-pointer">
       {/* Thumbnail */}
-      <Link to={`/watch/${_id}`} className="relative block">
-        <div className="w-full aspect-video bg-[#272727] rounded-xl overflow-hidden">
+      <Link to={`/watch/${_id}`} className="relative block w-full">
+        <div className="w-full aspect-video bg-[#1a1a1a] rounded-xl overflow-hidden">
           {thumbnail ? (
             <img
               src={thumbnail}
               alt={title}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-[#717171]">
+            <div className="w-full h-full flex items-center justify-center text-[#444] text-xs">
               No Thumbnail
             </div>
           )}
+
+          {/* Hover overlay */}
+          <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
+
+          {/* Duration */}
+          {duration > 0 && (
+            <span className="absolute bottom-2 right-2 bg-black/90 text-white text-xs px-1.5 py-0.5 rounded-md font-medium tracking-wide">
+              {formatDuration(duration)}
+            </span>
+          )}
         </div>
-        {/* Duration Badge */}
-        {duration && (
-          <span className="absolute bottom-2 right-2 bg-black/80 text-white text-xs px-1.5 py-0.5 rounded font-medium">
-            {formatDuration(duration)}
-          </span>
-        )}
       </Link>
 
       {/* Info */}
-      <div className="flex gap-3">
-        <Link to={`/channel/${owner?._id}`}>
+      <div className="flex gap-3 px-0.5">
+        <Link to={`/channel/${owner?.username}`} className="shrink-0 mt-0.5">
           <Avatar src={owner?.avatar} alt={owner?.username} size="md" />
         </Link>
 
         <div className="flex-1 min-w-0">
           <Link to={`/watch/${_id}`}>
-            <h3 className="text-white text-sm font-medium line-clamp-2 leading-snug hover:text-[#6c63ff] transition-colors duration-150">
+            <h3 className="text-[#f1f1f1] text-sm font-medium line-clamp-2 leading-snug hover:text-white transition-colors duration-150 mb-1">
               {title}
             </h3>
           </Link>
           <Link to={`/channel/${owner?.username}`}>
-            <p className="text-[#aaaaaa] text-xs mt-1 hover:text-white transition-colors duration-150">
+            <p className="text-[#aaaaaa] text-xs hover:text-white transition-colors duration-150 mb-0.5">
               {owner?.username || "Unknown Channel"}
             </p>
           </Link>
-          <p className="text-[#717171] text-xs mt-0.5">
+          <p className="text-[#717171] text-xs">
             {formatViews(views)} views
             {createdAt && ` • ${format(createdAt)}`}
           </p>

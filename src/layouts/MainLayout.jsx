@@ -11,9 +11,8 @@ const MainLayout = ({ children }) => {
       <div className="flex pt-14">
         <Sidebar isOpen={sidebarOpen} />
         <main
-          className={`flex-1 transition-all duration-300 ${
-            sidebarOpen ? "ml-60" : "ml-16"
-          } p-6 min-h-[calc(100vh-3.5rem)]`}
+          style={{ marginLeft: sidebarOpen ? "240px" : "72px" }}
+          className="flex-1 transition-all duration-300 min-h-[calc(100vh-3.5rem)] overflow-x-hidden"
         >
           {children}
         </main>
