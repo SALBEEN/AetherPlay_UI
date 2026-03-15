@@ -52,4 +52,19 @@ export const videoService = {
     const res = await axiosInstance.patch(`/videos/view/${videoId}`);
     return res.data;
   },
+
+  uploadVideo: async (formData, onUploadProgress) => {
+    const res = await axiosInstance.post("/videos", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+      onUploadProgress: (progressEvent) => {
+        if (onUploadProgress) {
+          const percent = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total,
+          );
+          onUploadProgress(percent);
+        }
+      },
+    });
+    return res.data;
+  },
 };
