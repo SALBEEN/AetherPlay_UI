@@ -1,14 +1,28 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { authService } from "../../services/authService";
 
-// Async thunk — fetch current logged in user
 export const fetchCurrentUser = createAsyncThunk(
   "auth/fetchCurrentUser",
   async (_, { rejectWithValue }) => {
     try {
       const res = await authService.getCurrentUser();
-      return res.data;
+      const userData =
+        res?.data?.data?.user ||
+        res?.data?.data ||
+        res?.data?.user ||
+        res?.data ||
+        null;
+      return userData;
     } catch (err) {
+      // Fall back to localStorage if API fails
+      const localUser = localStorage.getItem("user");
+      if (localUser) {
+        try {
+          return JSON.parse(localUser);
+        } catch {
+          return rejectWithValue("Failed to parse local user");
+        }
+      }
       return rejectWithValue(
         err?.response?.data?.message || "Not authenticated",
       );
@@ -16,7 +30,6 @@ export const fetchCurrentUser = createAsyncThunk(
   },
 );
 
-// Async thunk — logout
 export const logoutUser = createAsyncThunk(
   "auth/logoutUser",
   async (_, { rejectWithValue }) => {
@@ -25,6 +38,8 @@ export const logoutUser = createAsyncThunk(
       localStorage.removeItem("accessToken");
       localStorage.removeItem("user");
     } catch (err) {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("user");
       return rejectWithValue(err?.response?.data?.message || "Logout failed");
     }
   },
@@ -33,7 +48,13 @@ export const logoutUser = createAsyncThunk(
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    user: JSON.parse(localStorage.getItem("user") || "null"),
+    user: (() => {
+      try {
+        return JSON.parse(localStorage.getItem("user") || "null");
+      } catch {
+        return null;
+      }
+    })(),
     isAuthenticated: !!localStorage.getItem("accessToken"),
     loading: false,
     error: null,
@@ -52,7 +73,6 @@ const authSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // fetchCurrentUser
     builder
       .addCase(fetchCurrentUser.pending, (state) => {
         state.loading = true;
@@ -62,20 +82,31 @@ const authSlice = createSlice({
         state.loading = false;
         state.user = action.payload;
         state.isAuthenticated = true;
+        if (action.payload) {
+          localStorage.setItem("user", JSON.stringify(action.payload));
+        }
       })
       .addCase(fetchCurrentUser.rejected, (state, action) => {
         state.loading = false;
+        state.error = action.payload;
+        // Keep existing auth state if we have a token
+        if (!localStorage.getItem("accessToken")) {
+          state.user = null;
+          state.isAuthenticated = false;
+        }
+      })
+      .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
         state.isAuthenticated = false;
-        state.error = action.payload;
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(logoutUser.rejected, (state) => {
+        // Clear state even if logout API fails
+        state.user = null;
+        state.isAuthenticated = false;
+        state.loading = false;
       });
-
-    // logoutUser
-    builder.addCase(logoutUser.fulfilled, (state) => {
-      state.user = null;
-      state.isAuthenticated = false;
-      state.loading = false;
-    });
   },
 });
 
