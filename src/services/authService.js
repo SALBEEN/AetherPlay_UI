@@ -1,0 +1,25 @@
+import axiosInstance from "../api/axiosInstance";
+
+export const authService = {
+  register: async (data) => {
+    const res = await axiosInstance.post("/users/register", data, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return res.data;
+  },
+
+  login: async (data) => {
+    const res = await axiosInstance.post("/users/login", data);
+    return res.data;
+  },
+
+  logout: async () => {
+    const res = await axiosInstance.post("/users/logout");
+    return res.data;
+  },
+
+  getCurrentUser: async () => {
+    const res = await axiosInstance.get("/users/current-user");
+    return res.data;
+  },
+};
