@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { authService } from "../../services/authService";
 import Button from "../../components/common/Button";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../store/slices/authSlice";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -13,6 +15,8 @@ const Login = () => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  const dispatch = useDispatch();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -20,7 +24,7 @@ const Login = () => {
       const res = await authService.login(form);
       const { accessToken, user } = res.data;
       localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("user", JSON.stringify(user));
+      dispatch(setUser(user));
       toast.success(`Welcome back, ${user?.username}!`);
       navigate("/");
     } catch (err) {
