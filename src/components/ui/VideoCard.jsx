@@ -63,7 +63,7 @@ const VideoCard = ({ video }) => {
               {title}
             </h3>
           </Link>
-          <Link to={`/channel/${owner?._id}`}>
+          <Link to={`/channel/${owner?.username}`}>
             <p className="text-[#aaaaaa] text-xs mt-1 hover:text-white transition-colors duration-150">
               {owner?.username || "Unknown Channel"}
             </p>

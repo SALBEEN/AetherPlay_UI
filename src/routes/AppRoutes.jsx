@@ -8,6 +8,7 @@ import Profile from "../pages/Profile/Profile";
 import Login from "../pages/Login/Login";
 import Register from "../pages/Register/Register";
 import NotFound from "../pages/NotFound";
+import Upload from "../pages/Upload/Upload";
 
 const WithLayout = ({ children }) => <MainLayout>{children}</MainLayout>;
 
@@ -30,6 +31,7 @@ const AppRoutes = () => {
           </WithLayout>
         }
       />
+      // Change this route
       <Route
         path="/channel/:channelId"
         element={
@@ -54,7 +56,6 @@ const AppRoutes = () => {
           </WithLayout>
         }
       />
-
       {/* Placeholder routes — will be replaced in later steps */}
       <Route
         path="/subscriptions"
@@ -84,15 +85,13 @@ const AppRoutes = () => {
         path="/upload"
         element={
           <WithLayout>
-            <Home />
+            <Upload />
           </WithLayout>
         }
       />
-
       {/* Auth — no layout */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-
       {/* 404 */}
       <Route path="*" element={<NotFound />} />
     </Routes>
