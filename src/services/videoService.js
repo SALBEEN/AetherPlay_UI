@@ -46,4 +46,10 @@ export const videoService = {
     const res = await axiosInstance.delete(`/videos/${videoId}`);
     return res.data;
   },
+
+  // Add inside videoService object
+  incrementView: async (videoId) => {
+    const res = await axiosInstance.patch(`/videos/view/${videoId}`);
+    return res.data;
+  },
 };
