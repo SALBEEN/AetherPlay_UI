@@ -1,27 +1,55 @@
 import clsx from "clsx";
 
 const sizes = {
-  sm: "w-7 h-7 text-xs",
-  md: "w-9 h-9 text-sm",
-  lg: "w-12 h-12 text-base",
-  xl: "w-20 h-20 text-2xl",
+  sm: { width: "32px", height: "32px", fontSize: "12px" },
+  md: { width: "36px", height: "36px", fontSize: "14px" },
+  lg: { width: "48px", height: "48px", fontSize: "16px" },
+  xl: { width: "80px", height: "80px", fontSize: "28px" },
 };
 
 const Avatar = ({ src, alt = "User", size = "md", className = "" }) => {
+  const s = sizes[size];
+
   return (
     <div
-      className={clsx(
-        "rounded-full overflow-hidden shrink-0 bg-[#272727]",
-        sizes[size],
-        className,
-      )}
+      style={{
+        width: s.width,
+        height: s.height,
+        borderRadius: "50%",
+        overflow: "hidden",
+        backgroundColor: "#3d3d3d",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexShrink: 0,
+        position: "relative",
+      }}
     >
       {src ? (
-        <img src={src} alt={alt} className="w-full h-full object-cover" />
+        <img
+          src={src}
+          alt={alt}
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            display: "block",
+            position: "absolute",
+            top: 0,
+            left: 0,
+          }}
+        />
       ) : (
-        <div className="w-full h-full flex items-center justify-center text-[#aaaaaa] font-semibold uppercase">
-          {alt?.charAt(0)}
-        </div>
+        <span
+          style={{
+            color: "#fff",
+            fontSize: s.fontSize,
+            fontWeight: 700,
+            lineHeight: 1,
+          }}
+        >
+          {alt?.charAt(0)?.toUpperCase() || "?"}
+        </span>
       )}
     </div>
   );

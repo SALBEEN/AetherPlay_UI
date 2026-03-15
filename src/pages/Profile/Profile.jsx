@@ -81,7 +81,7 @@ const Profile = () => {
     <div
       style={{ maxWidth: "1100px", margin: "0 auto", paddingBottom: "60px" }}
     >
-      {/* Cover Banner */}
+      {/* Cover Banner — NO avatar inside */}
       <div
         style={{
           width: "100%",
@@ -89,9 +89,9 @@ const Profile = () => {
           borderRadius: "12px",
           background:
             "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)",
-          position: "relative",
           overflow: "hidden",
-          marginBottom: "60px",
+          position: "relative",
+          marginBottom: "0",
         }}
       >
         <div
@@ -102,29 +102,36 @@ const Profile = () => {
               "radial-gradient(circle at 30% 50%, rgba(108,99,255,0.4) 0%, transparent 70%)",
           }}
         />
+      </div>
 
-        {/* Avatar overlapping cover */}
+      {/* Avatar row — outside cover */}
+      <div style={{ padding: "0 24px" }}>
         <div
           style={{
-            position: "absolute",
-            bottom: "-40px",
-            left: "24px",
             width: "80px",
             height: "80px",
             borderRadius: "50%",
             overflow: "hidden",
             backgroundColor: "#3d3d3d",
             border: "4px solid #0f0f0f",
+            marginTop: "-40px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            position: "relative",
+            zIndex: 10,
           }}
         >
           {user?.avatar ? (
             <img
               src={user.avatar}
-              alt={user.username}
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              alt={user?.username}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                display: "block",
+              }}
             />
           ) : (
             <span style={{ color: "#fff", fontSize: "28px", fontWeight: 700 }}>
@@ -142,7 +149,7 @@ const Profile = () => {
           justifyContent: "space-between",
           flexWrap: "wrap",
           gap: "16px",
-          padding: "0 24px",
+          padding: "12px 24px",
           marginBottom: "28px",
         }}
       >
@@ -165,7 +172,6 @@ const Profile = () => {
           <p style={{ color: "#717171", fontSize: "13px" }}>{user?.email}</p>
         </div>
 
-        {/* Action Buttons */}
         <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
           <Link
             to="/upload"
@@ -314,7 +320,6 @@ const Profile = () => {
 
       {/* Tab Content */}
       <div style={{ padding: "0 24px" }}>
-        {/* Videos */}
         {activeTab === "videos" &&
           (loading ? (
             <div
@@ -381,7 +386,6 @@ const Profile = () => {
             </div>
           ))}
 
-        {/* About */}
         {activeTab === "about" && (
           <div style={{ maxWidth: "500px" }}>
             <div

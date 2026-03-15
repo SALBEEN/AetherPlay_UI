@@ -57,6 +57,7 @@ const Navbar = ({ onMenuClick }) => {
           alignItems: "center",
           gap: "16px",
           minWidth: "180px",
+          flexShrink: 0,
         }}
       >
         <button
@@ -196,6 +197,7 @@ const Navbar = ({ onMenuClick }) => {
           gap: "8px",
           minWidth: "180px",
           justifyContent: "flex-end",
+          flexShrink: 0,
         }}
       >
         {isAuthenticated ? (
