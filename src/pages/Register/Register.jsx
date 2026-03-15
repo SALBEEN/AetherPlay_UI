@@ -14,6 +14,7 @@ const Register = () => {
     password: "",
   });
   const [avatar, setAvatar] = useState(null);
+  const [coverImage, setCoverImage] = useState(null);
 
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -21,11 +22,19 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!avatar) {
+      toast.error("Avatar image is required");
+      return;
+    }
     try {
       setLoading(true);
       const formData = new FormData();
-      Object.entries(form).forEach(([k, v]) => formData.append(k, v));
-      if (avatar) formData.append("avatar", avatar);
+      formData.append("fullName", form.fullName);
+      formData.append("username", form.username);
+      formData.append("email", form.email);
+      formData.append("password", form.password);
+      formData.append("avatar", avatar);
+      if (coverImage) formData.append("coverImage", coverImage);
 
       await authService.register(formData);
       toast.success("Account created! Please sign in.");
@@ -40,7 +49,6 @@ const Register = () => {
   return (
     <div className="min-h-screen bg-[#0f0f0f] flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-md">
-        {/* Logo */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-white">
             Aether<span className="text-[#6c63ff]">Play</span>
@@ -48,7 +56,6 @@ const Register = () => {
           <p className="text-[#aaaaaa] text-sm mt-2">Create your account</p>
         </div>
 
-        {/* Card */}
         <div className="bg-[#1a1a1a] border border-[#2e2e2e] rounded-2xl p-8">
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             {[
@@ -91,17 +98,37 @@ const Register = () => {
               </div>
             ))}
 
-            {/* Avatar Upload */}
+            {/* Avatar — Required */}
             <div className="flex flex-col gap-1.5">
               <label className="text-sm text-[#aaaaaa]">
-                Avatar (optional)
+                Avatar <span className="text-red-400">*</span>
               </label>
               <input
                 type="file"
                 accept="image/*"
+                required
                 onChange={(e) => setAvatar(e.target.files[0])}
                 className="text-sm text-[#aaaaaa] file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-[#272727] file:text-white hover:file:bg-[#3f3f3f] file:cursor-pointer"
               />
+              {avatar && (
+                <p className="text-xs text-green-400">✓ {avatar.name}</p>
+              )}
+            </div>
+
+            {/* Cover Image — Optional */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm text-[#aaaaaa]">
+                Cover Image (optional)
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setCoverImage(e.target.files[0])}
+                className="text-sm text-[#aaaaaa] file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-[#272727] file:text-white hover:file:bg-[#3f3f3f] file:cursor-pointer"
+              />
+              {coverImage && (
+                <p className="text-xs text-green-400">✓ {coverImage.name}</p>
+              )}
             </div>
 
             <Button type="submit" loading={loading} className="w-full mt-2">

@@ -1,31 +1,33 @@
 import { useState, useEffect } from "react";
 import { videoService } from "../services/videoService";
 
-const useVideo = (videoId) => {
-  const [video, setVideo] = useState(null);
+const useVideos = (params = {}) => {
+  const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [hasMore, setHasMore] = useState(false);
 
   useEffect(() => {
-    if (!videoId) return;
-
-    const fetchVideo = async () => {
+    const fetchVideos = async () => {
       try {
         setLoading(true);
         setError(null);
-        const data = await videoService.getVideoById(videoId);
-        setVideo(data?.data || null);
+        const data = await videoService.getAllVideos(params);
+        const videoList = data?.data?.videos || data?.data || [];
+        const total = data?.data?.totalVideos || videoList.length;
+        setVideos(videoList);
+        setHasMore(videoList.length < total);
       } catch (err) {
-        setError(err?.response?.data?.message || "Failed to load video");
+        setError(err?.response?.data?.message || "Failed to load videos");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchVideo();
-  }, [videoId]);
+    fetchVideos();
+  }, [params.query, params.page, params.sortBy]);
 
-  return { video, loading, error, setVideo };
+  return { videos, loading, error, hasMore };
 };
 
-export default useVideo;
+export default useVideos;

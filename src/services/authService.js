@@ -9,7 +9,11 @@ export const authService = {
   },
 
   login: async (data) => {
-    const res = await axiosInstance.post("/users/login", data);
+    const res = await axiosInstance.post("/users/login", {
+      username: data.username,
+      email: data.username,
+      password: data.password,
+    });
     return res.data;
   },
 

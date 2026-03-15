@@ -9,49 +9,84 @@ import Login from "../pages/Login/Login";
 import Register from "../pages/Register/Register";
 import NotFound from "../pages/NotFound";
 
+const WithLayout = ({ children }) => <MainLayout>{children}</MainLayout>;
+
 const AppRoutes = () => {
   return (
     <Routes>
-      {/* Main Layout Routes */}
       <Route
-        element={
-          <MainLayout>
-            <Home />
-          </MainLayout>
-        }
         path="/"
+        element={
+          <WithLayout>
+            <Home />
+          </WithLayout>
+        }
       />
       <Route
-        element={
-          <MainLayout>
-            <Watch />
-          </MainLayout>
-        }
         path="/watch/:videoId"
+        element={
+          <WithLayout>
+            <Watch />
+          </WithLayout>
+        }
       />
       <Route
-        element={
-          <MainLayout>
-            <Channel />
-          </MainLayout>
-        }
         path="/channel/:channelId"
+        element={
+          <WithLayout>
+            <Channel />
+          </WithLayout>
+        }
       />
       <Route
-        element={
-          <MainLayout>
-            <Playlist />
-          </MainLayout>
-        }
         path="/playlist/:playlistId"
+        element={
+          <WithLayout>
+            <Playlist />
+          </WithLayout>
+        }
       />
       <Route
-        element={
-          <MainLayout>
-            <Profile />
-          </MainLayout>
-        }
         path="/profile"
+        element={
+          <WithLayout>
+            <Profile />
+          </WithLayout>
+        }
+      />
+
+      {/* Placeholder routes — will be replaced in later steps */}
+      <Route
+        path="/subscriptions"
+        element={
+          <WithLayout>
+            <Home />
+          </WithLayout>
+        }
+      />
+      <Route
+        path="/library"
+        element={
+          <WithLayout>
+            <Home />
+          </WithLayout>
+        }
+      />
+      <Route
+        path="/history"
+        element={
+          <WithLayout>
+            <Home />
+          </WithLayout>
+        }
+      />
+      <Route
+        path="/upload"
+        element={
+          <WithLayout>
+            <Home />
+          </WithLayout>
+        }
       />
 
       {/* Auth — no layout */}

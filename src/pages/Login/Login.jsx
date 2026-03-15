@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 const Login = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [form, setForm] = useState({ email: "", password: "" });
+  const [form, setForm] = useState({ username: "", password: "" });
 
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -33,7 +33,6 @@ const Login = () => {
   return (
     <div className="min-h-screen bg-[#0f0f0f] flex items-center justify-center px-4">
       <div className="w-full max-w-md">
-        {/* Logo */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-white">
             Aether<span className="text-[#6c63ff]">Play</span>
@@ -41,19 +40,18 @@ const Login = () => {
           <p className="text-[#aaaaaa] text-sm mt-2">Sign in to your account</p>
         </div>
 
-        {/* Card */}
         <div className="bg-[#1a1a1a] border border-[#2e2e2e] rounded-2xl p-8">
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <div className="flex flex-col gap-1.5">
               <label className="text-sm text-[#aaaaaa]">
-                Email or Username
+                Username or Email
               </label>
               <input
-                name="email"
+                name="username"
                 type="text"
-                value={form.email}
+                value={form.username}
                 onChange={handleChange}
-                placeholder="you@example.com"
+                placeholder="Enter your username or email"
                 required
                 className="bg-[#272727] border border-[#2e2e2e] focus:border-[#6c63ff] rounded-lg px-4 py-2.5 text-sm text-white placeholder-[#717171] outline-none transition-colors duration-200"
               />

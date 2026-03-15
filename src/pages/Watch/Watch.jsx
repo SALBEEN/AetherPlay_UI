@@ -12,6 +12,7 @@ import SubscribeButton from "../../components/ui/SubscribeButton";
 import VideoCard from "../../components/ui/VideoCard";
 import Skeleton from "../../components/common/Skeleton";
 import { VideoCardSkeleton } from "../../components/common/Skeleton";
+import CommentSection from "../../components/ui/CommentSection";
 
 const Watch = () => {
   const { videoId } = useParams();
@@ -127,6 +128,9 @@ const Watch = () => {
                   </p>
                 </div>
               )}
+
+              <div className="border-t border-[#2e2e2e] mt-6" />
+              <CommentSection videoId={videoId} />
             </>
           )}
         </div>
