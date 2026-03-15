@@ -15,6 +15,7 @@ const Navbar = ({ onMenuClick }) => {
   const { user, isAuthenticated } = useSelector((state) => state.auth);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -25,6 +26,13 @@ const Navbar = ({ onMenuClick }) => {
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
 
   const handleLogout = async () => {
     await dispatch(logoutUser());
@@ -88,7 +96,6 @@ const Navbar = ({ onMenuClick }) => {
             textDecoration: "none",
             display: "flex",
             alignItems: "center",
-            gap: "4px",
           }}
         >
           <span
@@ -104,91 +111,7 @@ const Navbar = ({ onMenuClick }) => {
         </Link>
       </div>
 
-      {/* Center */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "8px",
-          flex: 1,
-          maxWidth: "600px",
-          margin: "0 40px",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            flex: 1,
-            alignItems: "center",
-            border: `1px solid ${searchFocused ? "#1c62b9" : "#303030"}`,
-            borderRadius: "40px",
-            overflow: "hidden",
-            backgroundColor: "#121212",
-            boxShadow: searchFocused
-              ? "inset 0 1px 2px rgba(0,0,0,0.3)"
-              : "none",
-          }}
-        >
-          <input
-            type="text"
-            placeholder="Search"
-            onFocus={() => setSearchFocused(true)}
-            onBlur={() => setSearchFocused(false)}
-            style={{
-              flex: 1,
-              background: "none",
-              border: "none",
-              outline: "none",
-              padding: "8px 16px",
-              color: "#f1f1f1",
-              fontSize: "16px",
-            }}
-          />
-          <button
-            style={{
-              padding: "8px 20px",
-              background: "#222222",
-              border: "none",
-              borderLeft: "1px solid #303030",
-              cursor: "pointer",
-              color: "#f1f1f1",
-              display: "flex",
-              alignItems: "center",
-            }}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.backgroundColor = "#3d3d3d")
-            }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.backgroundColor = "#222222")
-            }
-          >
-            <IoSearchOutline size={20} />
-          </button>
-        </div>
-        <button
-          style={{
-            width: "40px",
-            height: "40px",
-            borderRadius: "50%",
-            background: "#222222",
-            border: "none",
-            cursor: "pointer",
-            color: "#f1f1f1",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-          onMouseEnter={(e) =>
-            (e.currentTarget.style.backgroundColor = "#3d3d3d")
-          }
-          onMouseLeave={(e) =>
-            (e.currentTarget.style.backgroundColor = "#222222")
-          }
-        >
-          <IoMicOutline size={18} />
-        </button>
-      </div>
-
+      {/* Center — Search */}
       <div
         style={{
           display: "flex",
@@ -324,7 +247,6 @@ const Navbar = ({ onMenuClick }) => {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                position: "relative",
               }}
               onMouseEnter={(e) =>
                 (e.currentTarget.style.backgroundColor = "#272727")
@@ -336,6 +258,7 @@ const Navbar = ({ onMenuClick }) => {
               <FiBell size={22} />
             </button>
 
+            {/* Avatar Dropdown */}
             <div style={{ position: "relative" }} ref={dropdownRef}>
               <button
                 onClick={() => setDropdownOpen((p) => !p)}
@@ -389,6 +312,7 @@ const Navbar = ({ onMenuClick }) => {
                       </p>
                     </div>
                   </div>
+
                   {[
                     { label: "Your channel", to: `/channel/${user?.username}` },
                     { label: "Your profile", to: "/profile" },
@@ -414,6 +338,7 @@ const Navbar = ({ onMenuClick }) => {
                       {item.label}
                     </Link>
                   ))}
+
                   <div
                     style={{
                       borderTop: "1px solid #383838",
@@ -432,6 +357,7 @@ const Navbar = ({ onMenuClick }) => {
                         cursor: "pointer",
                         color: "#f1f1f1",
                         fontSize: "14px",
+                        fontFamily: "Roboto, sans-serif",
                       }}
                       onMouseEnter={(e) =>
                         (e.currentTarget.style.backgroundColor = "#3d3d3d")
