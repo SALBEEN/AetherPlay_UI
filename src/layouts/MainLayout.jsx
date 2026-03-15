@@ -6,13 +6,18 @@ const MainLayout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f] text-white">
-      <Navbar onMenuClick={() => setSidebarOpen((prev) => !prev)} />
-      <div className="flex pt-14">
+    <div style={{ minHeight: "100vh", backgroundColor: "#0f0f0f" }}>
+      <Navbar onMenuClick={() => setSidebarOpen((p) => !p)} />
+      <div style={{ display: "flex", paddingTop: "56px" }}>
         <Sidebar isOpen={sidebarOpen} />
         <main
-          style={{ marginLeft: sidebarOpen ? "240px" : "72px" }}
-          className="flex-1 transition-all duration-300 min-h-[calc(100vh-3.5rem)] overflow-x-hidden"
+          style={{
+            marginLeft: sidebarOpen ? "240px" : "72px",
+            flex: 1,
+            minHeight: "calc(100vh - 56px)",
+            transition: "margin-left 0.2s ease",
+            overflowX: "hidden",
+          }}
         >
           {children}
         </main>

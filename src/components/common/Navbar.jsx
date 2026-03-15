@@ -19,9 +19,8 @@ const Navbar = ({ onMenuClick }) => {
 
   useEffect(() => {
     const handleClick = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target))
         setDropdownOpen(false);
-      }
     };
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
@@ -35,110 +34,325 @@ const Navbar = ({ onMenuClick }) => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 h-14 bg-[#0f0f0f]/95 backdrop-blur-md flex items-center justify-between px-4 border-b border-white/5">
+    <header
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 100,
+        height: "56px",
+        backgroundColor: "#0f0f0f",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: "0 16px",
+        borderBottom: "1px solid #272727",
+      }}
+    >
       {/* Left */}
-      <div className="flex items-center gap-3 min-w-[200px]">
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "16px",
+          minWidth: "180px",
+        }}
+      >
         <button
           onClick={onMenuClick}
-          className="p-2 rounded-full hover:bg-white/10 transition-all duration-200 active:scale-95"
+          style={{
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            padding: "8px",
+            borderRadius: "50%",
+            color: "#f1f1f1",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.backgroundColor = "#272727")
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.backgroundColor = "transparent")
+          }
         >
-          <HiMenuAlt1 className="text-white text-xl" />
+          <HiMenuAlt1 size={20} />
         </button>
-        <Link to="/" className="flex items-center gap-1.5 group">
-          <div className="w-8 h-8 rounded-lg bg-[#6c63ff] flex items-center justify-center shadow-lg shadow-[#6c63ff]/30 group-hover:shadow-[#6c63ff]/50 transition-all duration-300">
-            <span className="text-white font-bold text-sm">A</span>
-          </div>
-          <span className="text-white font-semibold text-lg tracking-tight">
-            Aether<span className="text-[#6c63ff]">Play</span>
+        <Link
+          to="/"
+          style={{
+            textDecoration: "none",
+            display: "flex",
+            alignItems: "center",
+            gap: "4px",
+          }}
+        >
+          <span
+            style={{
+              color: "#f1f1f1",
+              fontWeight: 700,
+              fontSize: "18px",
+              letterSpacing: "-0.3px",
+            }}
+          >
+            Aether<span style={{ color: "#ff0000" }}>Play</span>
           </span>
         </Link>
       </div>
 
-      {/* Center — Search */}
-      <div className="flex items-center gap-2 w-full max-w-2xl mx-4">
+      {/* Center */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "8px",
+          flex: 1,
+          maxWidth: "600px",
+          margin: "0 40px",
+        }}
+      >
         <div
-          className={`flex flex-1 items-center rounded-full overflow-hidden transition-all duration-300 ${
-            searchFocused
-              ? "bg-[#1a1a1a] border border-[#6c63ff] shadow-lg shadow-[#6c63ff]/10"
-              : "bg-[#121212] border border-white/10 hover:border-white/20"
-          }`}
+          style={{
+            display: "flex",
+            flex: 1,
+            alignItems: "center",
+            border: `1px solid ${searchFocused ? "#1c62b9" : "#303030"}`,
+            borderRadius: "40px",
+            overflow: "hidden",
+            backgroundColor: "#121212",
+            boxShadow: searchFocused
+              ? "inset 0 1px 2px rgba(0,0,0,0.3)"
+              : "none",
+          }}
         >
           <input
             type="text"
             placeholder="Search"
             onFocus={() => setSearchFocused(true)}
             onBlur={() => setSearchFocused(false)}
-            className="flex-1 bg-transparent px-5 py-2 text-sm text-white placeholder-[#717171] outline-none"
+            style={{
+              flex: 1,
+              background: "none",
+              border: "none",
+              outline: "none",
+              padding: "8px 16px",
+              color: "#f1f1f1",
+              fontSize: "16px",
+            }}
           />
-          <button className="px-5 py-2.5 bg-white/5 hover:bg-white/10 border-l border-white/10 transition-colors duration-150 flex items-center gap-2">
-            <IoSearchOutline className="text-[#aaaaaa] text-lg" />
+          <button
+            style={{
+              padding: "8px 20px",
+              background: "#222222",
+              border: "none",
+              borderLeft: "1px solid #303030",
+              cursor: "pointer",
+              color: "#f1f1f1",
+              display: "flex",
+              alignItems: "center",
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.backgroundColor = "#3d3d3d")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.backgroundColor = "#222222")
+            }
+          >
+            <IoSearchOutline size={20} />
           </button>
         </div>
-        <button className="p-2.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 transition-all duration-200">
-          <IoMicOutline className="text-white text-lg" />
+        <button
+          style={{
+            width: "40px",
+            height: "40px",
+            borderRadius: "50%",
+            background: "#222222",
+            border: "none",
+            cursor: "pointer",
+            color: "#f1f1f1",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.backgroundColor = "#3d3d3d")
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.backgroundColor = "#222222")
+          }
+        >
+          <IoMicOutline size={18} />
         </button>
       </div>
 
       {/* Right */}
-      <div className="flex items-center gap-1 min-w-[200px] justify-end">
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "8px",
+          minWidth: "180px",
+          justifyContent: "flex-end",
+        }}
+      >
         {isAuthenticated ? (
           <>
             <Link to="/upload">
-              <button className="p-2.5 rounded-full hover:bg-white/10 transition-all duration-200 group hidden sm:flex">
-                <RiVideoAddLine className="text-[#aaaaaa] group-hover:text-white text-xl transition-colors" />
+              <button
+                style={{
+                  width: "40px",
+                  height: "40px",
+                  borderRadius: "50%",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  color: "#f1f1f1",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.backgroundColor = "#272727")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.backgroundColor = "transparent")
+                }
+              >
+                <RiVideoAddLine size={22} />
               </button>
             </Link>
-            <button className="p-2.5 rounded-full hover:bg-white/10 transition-all duration-200 group hidden sm:flex relative">
-              <FiBell className="text-[#aaaaaa] group-hover:text-white text-xl transition-colors" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#6c63ff] rounded-full border-2 border-[#0f0f0f]" />
+            <button
+              style={{
+                width: "40px",
+                height: "40px",
+                borderRadius: "50%",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                color: "#f1f1f1",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                position: "relative",
+              }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.backgroundColor = "#272727")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.backgroundColor = "transparent")
+              }
+            >
+              <FiBell size={22} />
             </button>
 
-            {/* Avatar Dropdown */}
-            <div className="relative ml-1" ref={dropdownRef}>
+            <div style={{ position: "relative" }} ref={dropdownRef}>
               <button
                 onClick={() => setDropdownOpen((p) => !p)}
-                className="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-full hover:bg-white/10 transition-all duration-200"
+                style={{
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  padding: "2px",
+                }}
               >
                 <Avatar src={user?.avatar} alt={user?.username} size="sm" />
-                <span className="text-sm text-white font-medium hidden md:block">
-                  {user?.username}
-                </span>
               </button>
 
               {dropdownOpen && (
-                <div className="absolute right-0 top-12 w-56 bg-[#1a1a1a] border border-white/10 rounded-2xl shadow-2xl shadow-black/50 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-                  <div className="flex items-center gap-3 px-4 py-3 border-b border-white/10">
+                <div
+                  style={{
+                    position: "absolute",
+                    right: 0,
+                    top: "48px",
+                    width: "220px",
+                    backgroundColor: "#282828",
+                    border: "1px solid #383838",
+                    borderRadius: "12px",
+                    boxShadow: "0 4px 20px rgba(0,0,0,0.5)",
+                    padding: "8px 0",
+                    zIndex: 200,
+                  }}
+                >
+                  <div
+                    style={{
+                      padding: "12px 16px",
+                      borderBottom: "1px solid #383838",
+                      display: "flex",
+                      gap: "12px",
+                      alignItems: "center",
+                    }}
+                  >
                     <Avatar src={user?.avatar} alt={user?.username} size="md" />
-                    <div className="min-w-0">
-                      <p className="text-white text-sm font-semibold truncate">
+                    <div>
+                      <p
+                        style={{
+                          color: "#f1f1f1",
+                          fontSize: "14px",
+                          fontWeight: 500,
+                        }}
+                      >
                         {user?.fullName}
                       </p>
-                      <p className="text-[#717171] text-xs truncate">
+                      <p style={{ color: "#aaaaaa", fontSize: "12px" }}>
                         @{user?.username}
                       </p>
                     </div>
                   </div>
-                  <Link
-                    to="/profile"
-                    onClick={() => setDropdownOpen(false)}
-                    className="flex items-center gap-3 px-4 py-2.5 text-sm text-[#aaaaaa] hover:text-white hover:bg-white/5 transition-colors mx-1 rounded-xl mt-1"
+                  {[
+                    { label: "Your channel", to: `/channel/${user?.username}` },
+                    { label: "Your profile", to: "/profile" },
+                  ].map((item) => (
+                    <Link
+                      key={item.to}
+                      to={item.to}
+                      onClick={() => setDropdownOpen(false)}
+                      style={{
+                        display: "block",
+                        padding: "10px 16px",
+                        color: "#f1f1f1",
+                        textDecoration: "none",
+                        fontSize: "14px",
+                      }}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.backgroundColor = "#3d3d3d")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.backgroundColor = "transparent")
+                      }
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                  <div
+                    style={{
+                      borderTop: "1px solid #383838",
+                      marginTop: "8px",
+                      paddingTop: "8px",
+                    }}
                   >
-                    Your Profile
-                  </Link>
-                  <Link
-                    to={`/channel/${user?.username}`}
-                    onClick={() => setDropdownOpen(false)}
-                    className="flex items-center gap-3 px-4 py-2.5 text-sm text-[#aaaaaa] hover:text-white hover:bg-white/5 transition-colors mx-1 rounded-xl"
-                  >
-                    Your Channel
-                  </Link>
-                  <div className="border-t border-white/10 mt-1 pt-1">
                     <button
                       onClick={handleLogout}
-                      className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-400 hover:bg-red-500/10 transition-colors mx-1 rounded-xl"
-                      style={{ width: "calc(100% - 8px)" }}
+                      style={{
+                        width: "100%",
+                        textAlign: "left",
+                        padding: "10px 16px",
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        color: "#f1f1f1",
+                        fontSize: "14px",
+                      }}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.backgroundColor = "#3d3d3d")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.backgroundColor = "transparent")
+                      }
                     >
-                      Sign Out
+                      Sign out
                     </button>
                   </div>
                 </div>
@@ -148,9 +362,20 @@ const Navbar = ({ onMenuClick }) => {
         ) : (
           <Link
             to="/login"
-            className="flex items-center gap-2 px-4 py-1.5 border border-[#3f3f3f] hover:border-[#6c63ff] text-white rounded-full text-sm transition-all duration-200 hover:bg-[#6c63ff]/10"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              padding: "8px 16px",
+              border: "1px solid #3d3d3d",
+              borderRadius: "20px",
+              color: "#3ea6ff",
+              textDecoration: "none",
+              fontSize: "14px",
+              fontWeight: 500,
+            }}
           >
-            <span>Sign in</span>
+            Sign in
           </Link>
         )}
       </div>

@@ -14,7 +14,6 @@ const categories = [
   "DevOps",
   "Gaming",
   "Music",
-  "News",
 ];
 
 const Home = () => {
@@ -26,68 +25,85 @@ const Home = () => {
   });
 
   return (
-    <div className="w-full">
-      {/* Category Pills */}
+    <div style={{ padding: "50px 24px 24px" }}>
+      {/* Category Bar */}
       <div
-        className="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide"
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        style={{
+          position: "sticky",
+          top: "56px",
+          zIndex: 80,
+          backgroundColor: "#0f0f0f",
+          borderBottom: "1px solid #272727",
+          padding: "12px 24px",
+          display: "flex",
+          gap: "8px",
+          overflowX: "auto",
+          scrollbarWidth: "none",
+        }}
       >
         {categories.map((cat) => (
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
-            className={`shrink-0 px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-200
-              ${
-                activeCategory === cat
-                  ? "bg-white text-black"
-                  : "bg-[#272727] text-[#f1f1f1] hover:bg-[#3f3f3f]"
-              }`}
+            style={{
+              flexShrink: 0,
+              padding: "6px 14px",
+              borderRadius: "8px",
+              border: "none",
+              cursor: "pointer",
+              fontSize: "14px",
+              fontWeight: 500,
+              backgroundColor: activeCategory === cat ? "#f1f1f1" : "#272727",
+              color: activeCategory === cat ? "#0f0f0f" : "#f1f1f1",
+              transition: "all 0.15s ease",
+              fontFamily: "Roboto, sans-serif",
+            }}
           >
             {cat}
           </button>
         ))}
       </div>
 
-      {/* Error */}
-      {error && (
-        <div className="flex flex-col items-center justify-center py-32 gap-3">
-          <div className="w-16 h-16 rounded-full bg-[#1a1a1a] flex items-center justify-center text-2xl">
-            📡
-          </div>
-          <p className="text-white font-medium">Could not load videos</p>
-          <p className="text-[#717171] text-sm">
-            Make sure your backend is running
-          </p>
-        </div>
-      )}
-
       {/* Grid */}
-      {!error && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-3 gap-y-8">
-          {loading
-            ? Array(12)
-                .fill(0)
-                .map((_, i) => <VideoCardSkeleton key={i} />)
-            : videos.map((video) => (
-                <VideoCard key={video._id} video={video} />
-              ))}
-        </div>
-      )}
-
-      {/* Empty */}
-      {!loading && !error && videos.length === 0 && (
-        <div className="flex flex-col items-center justify-center py-32 gap-4">
-          <div className="w-20 h-20 rounded-full bg-[#1a1a1a] flex items-center justify-center text-4xl">
-            🎬
+      <div style={{ padding: "24px 24px" }}>
+        {error ? (
+          <div style={{ textAlign: "center", paddingTop: "100px" }}>
+            <p style={{ fontSize: "40px", marginBottom: "16px" }}>📡</p>
+            <p style={{ color: "#f1f1f1", fontSize: "16px", fontWeight: 500 }}>
+              Could not load videos
+            </p>
+            <p style={{ color: "#717171", fontSize: "14px", marginTop: "8px" }}>
+              Make sure your backend is running
+            </p>
           </div>
-          <div className="text-center">
-            <p className="text-white font-semibold text-lg">No videos yet</p>
-            <p className="text-[#717171] text-sm mt-1">
+        ) : (
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(210px, 1fr))",
+              gap: "16px 8px",
+            }}
+          >
+            {loading
+              ? Array(12)
+                  .fill(0)
+                  .map((_, i) => <VideoCardSkeleton key={i} />)
+              : videos.map((v) => <VideoCard key={v._id} video={v} />)}
+          </div>
+        )}
+
+        {!loading && !error && videos.length === 0 && (
+          <div style={{ textAlign: "center", paddingTop: "100px" }}>
+            <p style={{ fontSize: "48px", marginBottom: "16px" }}>🎬</p>
+            <p style={{ color: "#f1f1f1", fontSize: "18px", fontWeight: 600 }}>
+              No videos yet
+            </p>
+            <p style={{ color: "#717171", fontSize: "14px", marginTop: "8px" }}>
               Upload your first video to get started
             </p>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

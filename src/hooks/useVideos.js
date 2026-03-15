@@ -16,9 +16,10 @@ const useVideos = (params = {}) => {
 
         // Handle all possible response shapes
         const videoList =
-          data?.data?.videos || data?.data?.videosList || data?.data || [];
+          data?.data?.videos ||
+          data?.data?.videosList ||
+          (Array.isArray(data?.data) ? data.data : []);
 
-        // Make sure it's always an array
         const safeList = Array.isArray(videoList) ? videoList : [];
         const total = data?.data?.totalVideos || safeList.length;
 

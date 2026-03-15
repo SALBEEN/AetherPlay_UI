@@ -1,56 +1,56 @@
 import { NavLink } from "react-router-dom";
 import { AiOutlineHome, AiFillHome } from "react-icons/ai";
-import {
-  MdOutlineSubscriptions,
-  MdSubscriptions,
-  MdOutlineVideoLibrary,
-  MdVideoLibrary,
-} from "react-icons/md";
+import { MdOutlineSubscriptions, MdSubscriptions } from "react-icons/md";
 import { BiHistory } from "react-icons/bi";
 import { HiOutlineUser, HiUser } from "react-icons/hi";
-import { BsBookmark, BsBookmarkFill } from "react-icons/bs";
-import { RiVideoAddLine } from "react-icons/ri";
+import {
+  BsBookmark,
+  BsBookmarkFill,
+  BsCameraVideoFill,
+  BsCameraVideo,
+} from "react-icons/bs";
+import { MdOutlineVideoLibrary, MdVideoLibrary } from "react-icons/md";
 
 const navItems = [
   {
-    icon: <AiOutlineHome size={20} />,
-    activeIcon: <AiFillHome size={20} />,
+    icon: <AiOutlineHome size={22} />,
+    activeIcon: <AiFillHome size={22} />,
     label: "Home",
     to: "/",
   },
   {
-    icon: <MdOutlineSubscriptions size={20} />,
-    activeIcon: <MdSubscriptions size={20} />,
+    icon: <MdOutlineSubscriptions size={22} />,
+    activeIcon: <MdSubscriptions size={22} />,
     label: "Subscriptions",
     to: "/subscriptions",
   },
   {
-    icon: <MdOutlineVideoLibrary size={20} />,
-    activeIcon: <MdVideoLibrary size={20} />,
+    icon: <MdOutlineVideoLibrary size={22} />,
+    activeIcon: <MdVideoLibrary size={22} />,
     label: "Library",
     to: "/library",
   },
   {
-    icon: <BiHistory size={20} />,
-    activeIcon: <BiHistory size={20} />,
+    icon: <BiHistory size={22} />,
+    activeIcon: <BiHistory size={22} />,
     label: "History",
     to: "/history",
   },
   {
-    icon: <BsBookmark size={20} />,
-    activeIcon: <BsBookmarkFill size={20} />,
+    icon: <BsBookmark size={22} />,
+    activeIcon: <BsBookmarkFill size={22} />,
     label: "Playlists",
     to: "/playlist",
   },
   {
-    icon: <RiVideoAddLine size={20} />,
-    activeIcon: <RiVideoAddLine size={20} />,
+    icon: <BsCameraVideo size={22} />,
+    activeIcon: <BsCameraVideoFill size={22} />,
     label: "Upload",
     to: "/upload",
   },
   {
-    icon: <HiOutlineUser size={20} />,
-    activeIcon: <HiUser size={20} />,
+    icon: <HiOutlineUser size={22} />,
+    activeIcon: <HiUser size={22} />,
     label: "Profile",
     to: "/profile",
   },
@@ -59,59 +59,109 @@ const navItems = [
 const Sidebar = ({ isOpen }) => {
   return (
     <aside
-      style={{ width: isOpen ? "240px" : "72px" }}
-      className="fixed top-14 left-0 h-[calc(100vh-3.5rem)] bg-[#0f0f0f] transition-all duration-300 z-40 overflow-y-auto overflow-x-hidden"
+      style={{
+        position: "fixed",
+        top: "56px",
+        left: 0,
+        height: "calc(100vh - 56px)",
+        width: isOpen ? "240px" : "72px",
+        backgroundColor: "#0f0f0f",
+        transition: "width 0.2s ease",
+        zIndex: 90,
+        overflowY: "auto",
+        overflowX: "hidden",
+      }}
     >
-      <nav className="flex flex-col py-3 px-2">
+      <nav style={{ padding: "12px 0" }}>
         {navItems.map((item) => (
-          <NavLink
-            key={item.to}
-            to={item.to}
-            end={item.to === "/"}
-            className={({ isActive }) =>
-              `flex items-center gap-4 px-3 py-2.5 rounded-xl my-0.5 transition-all duration-200 group
-              ${
-                isActive
-                  ? "bg-white/10 text-white font-medium"
-                  : "text-[#aaaaaa] hover:bg-white/5 hover:text-white"
-              }`
-            }
-          >
+          <NavLink key={item.to} to={item.to} end={item.to === "/"}>
             {({ isActive }) => (
-              <>
-                <span className="shrink-0">
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "24px",
+                  padding: isOpen ? "10px 24px" : "16px 0",
+                  justifyContent: isOpen ? "flex-start" : "center",
+                  backgroundColor: isActive ? "#272727" : "transparent",
+                  borderRadius: "10px",
+                  margin: "0 8px 2px",
+                  cursor: "pointer",
+                  color: isActive ? "#f1f1f1" : "#aaaaaa",
+                  textDecoration: "none",
+                  transition: "background-color 0.1s",
+                }}
+                onMouseEnter={(e) => {
+                  if (!isActive)
+                    e.currentTarget.style.backgroundColor = "#1a1a1a";
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive)
+                    e.currentTarget.style.backgroundColor = "transparent";
+                }}
+              >
+                <span style={{ flexShrink: 0 }}>
                   {isActive ? item.activeIcon : item.icon}
                 </span>
-                <span
-                  style={{
-                    opacity: isOpen ? 1 : 0,
-                    width: isOpen ? "auto" : 0,
-                  }}
-                  className="text-sm whitespace-nowrap overflow-hidden transition-all duration-300"
-                >
-                  {item.label}
-                </span>
-              </>
+                {isOpen && (
+                  <span
+                    style={{
+                      fontSize: "14px",
+                      fontWeight: isActive ? 600 : 400,
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {item.label}
+                  </span>
+                )}
+              </div>
             )}
           </NavLink>
         ))}
-      </nav>
 
-      {isOpen && (
-        <div className="px-4 mt-2 pt-4 border-t border-white/5">
-          <p className="text-[#717171] text-xs font-medium uppercase tracking-wider mb-3">
-            Explore
-          </p>
-          {["Trending", "Music", "Gaming", "News"].map((label) => (
-            <button
-              key={label}
-              className="w-full text-left px-3 py-2 text-sm text-[#aaaaaa] hover:text-white hover:bg-white/5 rounded-xl transition-all duration-200"
+        {isOpen && (
+          <>
+            <div
+              style={{
+                height: "1px",
+                backgroundColor: "#272727",
+                margin: "12px 24px",
+              }}
+            />
+            <p
+              style={{
+                padding: "4px 24px 8px",
+                color: "#aaaaaa",
+                fontSize: "14px",
+                fontWeight: 600,
+              }}
             >
-              {label}
-            </button>
-          ))}
-        </div>
-      )}
+              Explore
+            </p>
+            {["Trending", "Music", "Gaming", "News", "Sports"].map((label) => (
+              <div
+                key={label}
+                style={{
+                  padding: "10px 24px",
+                  fontSize: "14px",
+                  color: "#aaaaaa",
+                  cursor: "pointer",
+                  margin: "0 8px 2px",
+                  borderRadius: "10px",
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.backgroundColor = "#1a1a1a")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.backgroundColor = "transparent")
+                }
+              >
+                {label}
+              </div>
+            ))}
+          </>
+        )}
+      </nav>
     </aside>
   );
 };
