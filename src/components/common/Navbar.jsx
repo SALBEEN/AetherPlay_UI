@@ -189,6 +189,92 @@ const Navbar = ({ onMenuClick }) => {
         </button>
       </div>
 
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "8px",
+          flex: 1,
+          maxWidth: "600px",
+          margin: "0 16px",
+          minWidth: 0,
+        }}
+      >
+        <form
+          onSubmit={handleSearch}
+          style={{
+            display: "flex",
+            flex: 1,
+            alignItems: "center",
+            border: `1px solid ${searchFocused ? "#1c62b9" : "#303030"}`,
+            borderRadius: "40px",
+            overflow: "hidden",
+            backgroundColor: "#121212",
+          }}
+        >
+          <input
+            type="text"
+            placeholder="Search"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onFocus={() => setSearchFocused(true)}
+            onBlur={() => setSearchFocused(false)}
+            style={{
+              flex: 1,
+              background: "none",
+              border: "none",
+              outline: "none",
+              padding: "8px 16px",
+              color: "#f1f1f1",
+              fontSize: "16px",
+            }}
+          />
+          <button
+            type="submit"
+            style={{
+              padding: "8px 20px",
+              background: "#222222",
+              border: "none",
+              borderLeft: "1px solid #303030",
+              cursor: "pointer",
+              color: "#f1f1f1",
+              display: "flex",
+              alignItems: "center",
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.backgroundColor = "#3d3d3d")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.backgroundColor = "#222222")
+            }
+          >
+            <IoSearchOutline size={20} />
+          </button>
+        </form>
+        <button
+          style={{
+            width: "40px",
+            height: "40px",
+            borderRadius: "50%",
+            background: "#222222",
+            border: "none",
+            cursor: "pointer",
+            color: "#f1f1f1",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.backgroundColor = "#3d3d3d")
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.backgroundColor = "#222222")
+          }
+        >
+          <IoMicOutline size={18} />
+        </button>
+      </div>
+
       {/* Right */}
       <div
         style={{

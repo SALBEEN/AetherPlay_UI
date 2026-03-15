@@ -9,6 +9,7 @@ import Login from "../pages/Login/Login";
 import Register from "../pages/Register/Register";
 import NotFound from "../pages/NotFound";
 import Upload from "../pages/Upload/Upload";
+import Search from "../pages/Search/Search";
 
 const WithLayout = ({ children }) => <MainLayout>{children}</MainLayout>;
 
@@ -20,6 +21,14 @@ const AppRoutes = () => {
         element={
           <WithLayout>
             <Home />
+          </WithLayout>
+        }
+      />
+      <Route
+        path="/search"
+        element={
+          <WithLayout>
+            <Search />
           </WithLayout>
         }
       />
