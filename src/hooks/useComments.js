@@ -17,9 +17,10 @@ const useComments = (videoId) => {
       setError(null);
       const data = await commentService.getVideoComments(videoId);
       const list = data?.data?.comments || data?.data || [];
-      setComments(list);
+      setComments(Array.isArray(list) ? list : []);
     } catch (err) {
       setError(err?.response?.data?.message || "Failed to load comments");
+      setComments([]);
     } finally {
       setLoading(false);
     }
@@ -27,11 +28,9 @@ const useComments = (videoId) => {
 
   const addComment = async (content) => {
     try {
-      const data = await commentService.addComment(videoId, content);
-      const newComment = data?.data;
-      if (newComment) {
-        setComments((prev) => [newComment, ...prev]);
-      }
+      await commentService.addComment(videoId, content);
+      // Refetch all comments to get populated owner data
+      await fetchComments();
       return true;
     } catch (err) {
       throw err;

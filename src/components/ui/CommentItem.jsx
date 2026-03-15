@@ -1,12 +1,9 @@
 import { useState } from "react";
 import { format } from "timeago.js";
-import { MdDeleteOutline } from "react-icons/md";
-import Avatar from "./Avatar";
 import toast from "react-hot-toast";
 
 const CommentItem = ({ comment, onDelete }) => {
   const [deleting, setDeleting] = useState(false);
-
   const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
   const isOwner = currentUser?._id === comment?.owner?._id;
 
@@ -22,35 +19,88 @@ const CommentItem = ({ comment, onDelete }) => {
     }
   };
 
+  const ownerName =
+    comment?.owner?.username || comment?.owner?.fullName || "User";
+  const ownerAvatar = comment?.owner?.avatar;
+
   return (
-    <div className="flex gap-3 group">
-      <Avatar
-        src={comment?.owner?.avatar}
-        alt={comment?.owner?.username}
-        size="sm"
-      />
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 mb-1">
-          <span className="text-white text-sm font-medium">
-            {comment?.owner?.username || "Unknown"}
+    <div style={{ display: "flex", gap: "12px" }} className="group">
+      {/* Avatar */}
+      <div
+        style={{
+          width: "32px",
+          height: "32px",
+          borderRadius: "50%",
+          overflow: "hidden",
+          backgroundColor: "#3d3d3d",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexShrink: 0,
+        }}
+      >
+        {ownerAvatar ? (
+          <img
+            src={ownerAvatar}
+            alt={ownerName}
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          />
+        ) : (
+          <span style={{ color: "#fff", fontSize: "13px", fontWeight: 600 }}>
+            {ownerName?.charAt(0)?.toUpperCase()}
           </span>
-          <span className="text-[#717171] text-xs">
+        )}
+      </div>
+
+      {/* Content */}
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            marginBottom: "4px",
+          }}
+        >
+          <span style={{ color: "#f1f1f1", fontSize: "13px", fontWeight: 500 }}>
+            {ownerName}
+          </span>
+          <span style={{ color: "#717171", fontSize: "12px" }}>
             {format(comment?.createdAt)}
           </span>
         </div>
-        <p className="text-[#aaaaaa] text-sm leading-relaxed">
+        <p style={{ color: "#f1f1f1", fontSize: "14px", lineHeight: "20px" }}>
           {comment?.content}
         </p>
       </div>
 
-      {/* Delete button — only for comment owner */}
+      {/* Delete */}
       {isOwner && (
         <button
           onClick={handleDelete}
           disabled={deleting}
-          className="opacity-0 group-hover:opacity-100 transition-opacity duration-150 p-1.5 rounded-full hover:bg-[#272727] text-[#717171] hover:text-red-400 shrink-0"
+          style={{
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            color: "#717171",
+            padding: "4px",
+            borderRadius: "50%",
+            opacity: 0,
+            transition: "opacity 0.15s",
+            display: "flex",
+            alignItems: "center",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.opacity = "1";
+            e.currentTarget.style.color = "#ff4444";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.opacity = "0";
+            e.currentTarget.style.color = "#717171";
+          }}
         >
-          <MdDeleteOutline size={18} />
+          🗑
         </button>
       )}
     </div>

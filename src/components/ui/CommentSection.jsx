@@ -7,27 +7,43 @@ const CommentSection = ({ videoId }) => {
   const { comments, loading, error, addComment, deleteComment } =
     useComments(videoId);
 
+  const safeComments = Array.isArray(comments) ? comments : [];
+
   return (
-    <div className="mt-6">
+    <div style={{ marginTop: "24px" }}>
       {/* Header */}
-      <h3 className="text-white font-medium text-lg mb-6">
-        {loading ? "Comments" : `${comments.length} Comments`}
+      <h3
+        style={{
+          color: "#f1f1f1",
+          fontSize: "16px",
+          fontWeight: 600,
+          marginBottom: "24px",
+        }}
+      >
+        {loading ? "Comments" : `${safeComments.length} Comments`}
       </h3>
 
       {/* Add Comment */}
-      <div className="mb-8">
+      <div style={{ marginBottom: "32px" }}>
         <CommentBox onAdd={addComment} />
       </div>
 
       {/* Comments List */}
-      <div className="flex flex-col gap-6">
+      <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
         {loading ? (
           Array(4)
             .fill(0)
             .map((_, i) => (
-              <div key={i} className="flex gap-3">
+              <div key={i} style={{ display: "flex", gap: "12px" }}>
                 <Skeleton className="w-7 h-7 rounded-full shrink-0" />
-                <div className="flex-1 flex flex-col gap-2">
+                <div
+                  style={{
+                    flex: 1,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "8px",
+                  }}
+                >
                   <Skeleton className="h-3 w-1/4" />
                   <Skeleton className="h-3 w-full" />
                   <Skeleton className="h-3 w-3/4" />
@@ -35,16 +51,16 @@ const CommentSection = ({ videoId }) => {
               </div>
             ))
         ) : error ? (
-          <p className="text-[#aaaaaa] text-sm">{error}</p>
-        ) : comments.length === 0 ? (
-          <div className="text-center py-10">
-            <p className="text-2xl mb-2">💬</p>
-            <p className="text-[#aaaaaa] text-sm">
+          <p style={{ color: "#aaaaaa", fontSize: "14px" }}>{error}</p>
+        ) : safeComments.length === 0 ? (
+          <div style={{ textAlign: "center", paddingTop: "40px" }}>
+            <p style={{ fontSize: "32px", marginBottom: "8px" }}>💬</p>
+            <p style={{ color: "#aaaaaa", fontSize: "14px" }}>
               No comments yet. Be the first!
             </p>
           </div>
         ) : (
-          comments.map((comment) => (
+          safeComments.map((comment) => (
             <CommentItem
               key={comment._id}
               comment={comment}
