@@ -11,6 +11,7 @@ import NotFound from "../pages/NotFound";
 import Upload from "../pages/Upload/Upload";
 import Search from "../pages/Search/Search";
 import Subscriptions from "../pages/Subscriptions/Subscriptions";
+import History from "../pages/History/History";
 
 const WithLayout = ({ children }) => <MainLayout>{children}</MainLayout>;
 
@@ -87,7 +88,7 @@ const AppRoutes = () => {
         path="/history"
         element={
           <WithLayout>
-            <Home />
+            <History />
           </WithLayout>
         }
       />

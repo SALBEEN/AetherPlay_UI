@@ -12,6 +12,7 @@ import SubscribeButton from "../../components/ui/SubscribeButton";
 import { VideoCardSkeleton } from "../../components/common/Skeleton";
 import { videoService } from "../../services/videoService";
 import toast from "react-hot-toast";
+import axiosInstance from "../../api/axiosInstance";
 
 const Watch = () => {
   const { videoId } = useParams();
@@ -20,6 +21,13 @@ const Watch = () => {
   const [liked, setLiked] = useState(false);
   const [likeDelta, setLikeDelta] = useState(0);
   const [showFullDesc, setShowFullDesc] = useState(false);
+
+  useEffect(() => {
+    if (videoId && localStorage.getItem("accessToken")) {
+      // Add to watch history
+      axiosInstance.patch(`/users/history/${videoId}`).catch(() => {});
+    }
+  }, [videoId]);
 
   const handleLike = async () => {
     const token = localStorage.getItem("accessToken");
