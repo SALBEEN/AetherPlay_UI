@@ -51,11 +51,13 @@ const Watch = () => {
     );
 
   return (
+    // Replace the outer div
     <div
       style={{
         display: "flex",
+        flexDirection: window.innerWidth < 1024 ? "column" : "row",
         gap: "24px",
-        padding: "24px 24px 40px",
+        padding: window.innerWidth < 768 ? "12px" : "24px 24px 40px",
         maxWidth: "1800px",
         alignItems: "flex-start",
       }}

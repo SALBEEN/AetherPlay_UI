@@ -56,7 +56,7 @@ const navItems = [
   },
 ];
 
-const Sidebar = ({ isOpen }) => {
+const Sidebar = ({ isOpen, isMobile }) => {
   return (
     <aside
       style={{
@@ -64,15 +64,16 @@ const Sidebar = ({ isOpen }) => {
         top: "56px",
         left: 0,
         height: "calc(100vh - 56px)",
-        width: isOpen ? "240px" : "72px",
+        width: isOpen ? "240px" : isMobile ? "0" : "72px",
         backgroundColor: "#0f0f0f",
         transition: "width 0.2s ease",
-        zIndex: 90,
-        overflowY: "auto",
+        zIndex: isMobile ? 90 : 40,
+        overflowY: isOpen ? "auto" : "hidden",
         overflowX: "hidden",
+        borderRight: isOpen ? "1px solid #272727" : "none",
       }}
     >
-      <nav style={{ padding: "12px 0" }}>
+      <nav style={{ padding: "12px 0", width: "240px" }}>
         {navItems.map((item) => (
           <NavLink key={item.to} to={item.to} end={item.to === "/"}>
             {({ isActive }) => (
@@ -88,8 +89,8 @@ const Sidebar = ({ isOpen }) => {
                   margin: "0 8px 2px",
                   cursor: "pointer",
                   color: isActive ? "#f1f1f1" : "#aaaaaa",
-                  textDecoration: "none",
                   transition: "background-color 0.1s",
+                  textDecoration: "none",
                 }}
                 onMouseEnter={(e) => {
                   if (!isActive)
