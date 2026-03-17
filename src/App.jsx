@@ -1,19 +1,17 @@
 import { useEffect } from "react";
 import { BrowserRouter } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchCurrentUser } from "./store/slices/authSlice";
 import AppRoutes from "./routes/AppRoutes";
 
 function App() {
   const dispatch = useDispatch();
+  const { loading } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    // Try to fetch current user on app load
     const token = localStorage.getItem("accessToken");
-    if (token) {
-      dispatch(fetchCurrentUser());
-    }
+    if (token) dispatch(fetchCurrentUser());
   }, [dispatch]);
 
   return (
@@ -22,9 +20,11 @@ function App() {
         position="top-right"
         toastOptions={{
           style: {
-            background: "#1a1a1a",
+            background: "#282828",
             color: "#f1f1f1",
-            border: "1px solid #2e2e2e",
+            border: "1px solid #383838",
+            fontSize: "14px",
+            borderRadius: "12px",
           },
         }}
       />
