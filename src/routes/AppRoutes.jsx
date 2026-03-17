@@ -10,6 +10,7 @@ import Register from "../pages/Register/Register";
 import NotFound from "../pages/NotFound";
 import Upload from "../pages/Upload/Upload";
 import Search from "../pages/Search/Search";
+import Subscriptions from "../pages/Subscriptions/Subscriptions";
 
 const WithLayout = ({ children }) => <MainLayout>{children}</MainLayout>;
 
@@ -70,7 +71,7 @@ const AppRoutes = () => {
         path="/subscriptions"
         element={
           <WithLayout>
-            <Home />
+            <Subscriptions />
           </WithLayout>
         }
       />
