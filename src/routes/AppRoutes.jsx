@@ -12,6 +12,8 @@ import Upload from "../pages/Upload/Upload";
 import Search from "../pages/Search/Search";
 import Subscriptions from "../pages/Subscriptions/Subscriptions";
 import History from "../pages/History/History";
+import Library from "../pages/Library/Library";
+// import Playlist from "../pages/Playlist/Playlist";
 
 const WithLayout = ({ children }) => <MainLayout>{children}</MainLayout>;
 
@@ -80,7 +82,7 @@ const AppRoutes = () => {
         path="/library"
         element={
           <WithLayout>
-            <Home />
+            <Library />
           </WithLayout>
         }
       />

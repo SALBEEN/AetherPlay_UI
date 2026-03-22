@@ -1,5 +1,5 @@
 import { useParams, Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { format } from "timeago.js";
 import { AiOutlineLike, AiFillLike } from "react-icons/ai";
 import { RiShareForwardLine } from "react-icons/ri";
