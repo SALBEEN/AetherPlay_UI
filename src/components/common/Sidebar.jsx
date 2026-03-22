@@ -40,8 +40,8 @@ const navItems = [
     icon: <BsBookmark size={22} />,
     activeIcon: <BsBookmarkFill size={22} />,
     label: "Playlists",
-    to: "/playlist",
-  },
+    to: "/library",
+  }, // ← changed from /playlist to /library
   {
     icon: <BsCameraVideo size={22} />,
     activeIcon: <BsCameraVideoFill size={22} />,
