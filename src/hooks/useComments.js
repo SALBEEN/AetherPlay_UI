@@ -18,10 +18,13 @@ const useComments = (videoId) => {
       setLoading(true);
       setError(null);
       const data = await commentService.getVideoComments(videoId);
-      let list = data?.data?.comments || data?.data || [];
+
+      // Backend returns "comment" (singular) not "comments"
+      let list =
+        data?.data?.comment || data?.data?.comments || data?.data || [];
+
       list = Array.isArray(list) ? list : [];
 
-      // Sort on frontend
       if (sortBy === "recent") {
         list = [...list].sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
@@ -47,22 +50,27 @@ const useComments = (videoId) => {
       const data = await commentService.addComment(videoId, content);
       const newComment = data?.data;
 
-      if (newComment) {
-        // Instantly add to top
-        const commentWithUser = {
-          ...newComment,
-          owner:
-            newComment.owner ||
-            JSON.parse(localStorage.getItem("user") || "{}"),
-          createdAt: newComment.createdAt || new Date().toISOString(),
-        };
-        setComments((prev) =>
-          sortBy === "recent"
-            ? [commentWithUser, ...prev]
-            : [...prev, commentWithUser],
-        );
-        setTotal((prev) => prev + 1);
-      }
+      const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
+
+      // Build comment manually with all fields
+      const commentWithUser = {
+        _id: newComment?._id || Date.now().toString(),
+        content: content, // ← use the original content string
+        createdAt: newComment?.createdAt || new Date().toISOString(),
+        owner: newComment?.owner || {
+          _id: currentUser?._id,
+          username: currentUser?.username,
+          avatar: currentUser?.avatar,
+          fullName: currentUser?.fullName,
+        },
+      };
+
+      setComments((prev) =>
+        sortBy === "recent"
+          ? [commentWithUser, ...prev]
+          : [...prev, commentWithUser],
+      );
+      setTotal((prev) => prev + 1);
       return true;
     } catch (err) {
       throw err;
