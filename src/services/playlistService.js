@@ -16,6 +16,7 @@ export const playlistService = {
     return res.data;
   },
 
+  // videoId first, then playlistId — matches backend route
   addVideoToPlaylist: async (playlistId, videoId) => {
     const res = await axiosInstance.patch(
       `/playlists/add/${videoId}/${playlistId}`,
@@ -23,6 +24,7 @@ export const playlistService = {
     return res.data;
   },
 
+  // videoId first, then playlistId — matches backend route
   removeVideoFromPlaylist: async (playlistId, videoId) => {
     const res = await axiosInstance.patch(
       `/playlists/remove/${videoId}/${playlistId}`,

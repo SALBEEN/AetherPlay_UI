@@ -43,7 +43,14 @@ const SaveToPlaylist = ({ videoId }) => {
   };
 
   const isVideoInPlaylist = (playlist) => {
-    return playlist?.videos?.some((v) => v._id === videoId || v === videoId);
+    // Backend uses "video" not "videos"
+    const videoList = playlist?.video || playlist?.videos || [];
+    return videoList.some(
+      (v) =>
+        v._id === videoId ||
+        v === videoId ||
+        v?.toString() === videoId?.toString(),
+    );
   };
 
   const handleToggle = async (playlistId, isInPlaylist) => {
