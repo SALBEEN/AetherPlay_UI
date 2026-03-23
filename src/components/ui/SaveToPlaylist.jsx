@@ -222,7 +222,7 @@ const SaveToPlaylist = ({ videoId }) => {
                         flexShrink: 0,
                       }}
                     >
-                      {playlist?.videos?.length || 0}
+                      {playlist?.video?.length || playlist?.videos?.length || 0}
                     </p>
                   </div>
                 );

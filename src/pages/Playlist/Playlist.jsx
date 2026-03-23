@@ -26,7 +26,9 @@ const Playlist = () => {
       setLoading(true);
       setError(null);
       const res = await playlistService.getPlaylistById(playlistId);
-      const data = res?.data?.playlist || res?.data || null;
+      console.log("Playlist response:", res);
+      // Backend returns data directly after our aggregation fix
+      const data = res?.data || null;
       setPlaylist(data);
     } catch (err) {
       setError(err?.response?.data?.message || "Failed to load playlist");
@@ -51,7 +53,7 @@ const Playlist = () => {
       await playlistService.removeVideoFromPlaylist(playlistId, videoId);
       setPlaylist((prev) => ({
         ...prev,
-        videos: prev.videos.filter((v) => v._id !== videoId),
+        video: prev.video.filter((v) => v._id !== videoId),
       }));
       toast.success("Video removed from playlist");
     } catch {
@@ -59,10 +61,11 @@ const Playlist = () => {
     }
   };
 
+  // Use "video" field since that's what backend uses
+  const videos = Array.isArray(playlist?.video) ? playlist.video : [];
+
   const isOwner =
     user?._id === playlist?.owner?._id || user?._id === playlist?.owner;
-
-  const videos = Array.isArray(playlist?.videos) ? playlist.videos : [];
 
   if (error) {
     return (
@@ -165,6 +168,7 @@ const Playlist = () => {
                   </p>
                 </div>
               )}
+
               {/* Play all overlay */}
               {videos.length > 0 && (
                 <div
@@ -220,6 +224,7 @@ const Playlist = () => {
               >
                 {playlist?.name}
               </h1>
+
               {playlist?.description && (
                 <p
                   style={{
@@ -232,6 +237,41 @@ const Playlist = () => {
                   {playlist.description}
                 </p>
               )}
+
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  marginBottom: "4px",
+                }}
+              >
+                {playlist?.owner?.avatar && (
+                  <div
+                    style={{
+                      width: "24px",
+                      height: "24px",
+                      borderRadius: "50%",
+                      overflow: "hidden",
+                      backgroundColor: "#3d3d3d",
+                    }}
+                  >
+                    <img
+                      src={playlist.owner.avatar}
+                      alt={playlist.owner.username}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </div>
+                )}
+                <p style={{ color: "#aaaaaa", fontSize: "13px" }}>
+                  {playlist?.owner?.username}
+                </p>
+              </div>
+
               <p
                 style={{
                   color: "#aaaaaa",
@@ -241,6 +281,7 @@ const Playlist = () => {
               >
                 {videos.length} video{videos.length !== 1 ? "s" : ""}
               </p>
+
               {playlist?.createdAt && (
                 <p
                   style={{
@@ -328,7 +369,7 @@ const Playlist = () => {
               <p
                 style={{ color: "#717171", fontSize: "14px", marginTop: "8px" }}
               >
-                Add videos to this playlist from the watch page
+                Add videos from the watch page using the Save button
               </p>
             </div>
           ) : (
@@ -345,6 +386,7 @@ const Playlist = () => {
                   {isOwner && (
                     <button
                       onClick={() => handleRemoveVideo(video._id)}
+                      title="Remove from playlist"
                       style={{
                         position: "absolute",
                         top: "8px",
