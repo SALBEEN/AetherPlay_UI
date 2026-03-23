@@ -21,12 +21,21 @@ const Watch = () => {
   const [liked, setLiked] = useState(false);
   const [likeDelta, setLikeDelta] = useState(0);
   const [showFullDesc, setShowFullDesc] = useState(false);
+  const [subscriberCount, setSubscriberCount] = useState(0);
+  const [isSubscribed, setIsSubscribed] = useState(false);
 
   useEffect(() => {
     if (videoId && localStorage.getItem("accessToken")) {
       axiosInstance.patch(`/users/history/${videoId}`).catch(() => {});
     }
   }, [videoId]);
+
+  useEffect(() => {
+    if (video) {
+      setSubscriberCount(video?.owner?.subscribersCount || 0);
+      setIsSubscribed(video?.isSubscribed || false);
+    }
+  }, [video]);
 
   const handleLike = async () => {
     const token = localStorage.getItem("accessToken");
@@ -314,6 +323,8 @@ const Watch = () => {
                 )}
               </div>
             </Link>
+
+            {/* Channel name + subscriber count */}
             <div>
               <Link
                 to={`/channel/${video?.owner?.username}`}
@@ -331,13 +342,21 @@ const Watch = () => {
                 </p>
               </Link>
               <p style={{ color: "#aaaaaa", fontSize: "13px" }}>
-                {video?.owner?.subscribersCount || 0} subscribers
+                {subscriberCount.toLocaleString()} subscriber
+                {subscriberCount !== 1 ? "s" : ""}
               </p>
             </div>
           </div>
+
+          {/* Subscribe Button */}
           <SubscribeButton
             channelId={video?.owner?._id}
-            initialSubscribed={video?.isSubscribed || false}
+            initialSubscribed={isSubscribed}
+            subscriberCount={subscriberCount}
+            onSubscribeChange={(newSubbed, newCount) => {
+              setIsSubscribed(newSubbed);
+              setSubscriberCount(newCount);
+            }}
           />
         </div>
 
