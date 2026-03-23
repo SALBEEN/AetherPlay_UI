@@ -13,6 +13,7 @@ import { VideoCardSkeleton } from "../../components/common/Skeleton";
 import { videoService } from "../../services/videoService";
 import toast from "react-hot-toast";
 import axiosInstance from "../../api/axiosInstance";
+import SaveToPlaylist from "../../components/ui/SaveToPlaylist";
 
 const Watch = () => {
   const { videoId } = useParams();
