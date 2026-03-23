@@ -3,17 +3,16 @@ import { useState, useEffect } from "react";
 import { format } from "timeago.js";
 import { AiOutlineLike, AiFillLike } from "react-icons/ai";
 import { RiShareForwardLine } from "react-icons/ri";
-import { MdOutlinePlaylistAdd } from "react-icons/md";
 import { BiDotsVerticalRounded } from "react-icons/bi";
 import useVideo from "../../hooks/useVideo";
 import useVideos from "../../hooks/useVideos";
 import CommentSection from "../../components/ui/CommentSection";
 import SubscribeButton from "../../components/ui/SubscribeButton";
+import SaveToPlaylist from "../../components/ui/SaveToPlaylist";
 import { VideoCardSkeleton } from "../../components/common/Skeleton";
 import { videoService } from "../../services/videoService";
 import toast from "react-hot-toast";
 import axiosInstance from "../../api/axiosInstance";
-import SaveToPlaylist from "../../components/ui/SaveToPlaylist";
 
 const Watch = () => {
   const { videoId } = useParams();
@@ -25,7 +24,6 @@ const Watch = () => {
 
   useEffect(() => {
     if (videoId && localStorage.getItem("accessToken")) {
-      // Add to watch history
       axiosInstance.patch(`/users/history/${videoId}`).catch(() => {});
     }
   }, [videoId]);
@@ -60,7 +58,6 @@ const Watch = () => {
     );
 
   return (
-    // Replace the outer div
     <div
       style={{
         display: "flex",
@@ -165,7 +162,14 @@ const Watch = () => {
           </p>
 
           {/* Action Buttons */}
-          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+          <div
+            style={{
+              display: "flex",
+              gap: "8px",
+              flexWrap: "wrap",
+              alignItems: "center",
+            }}
+          >
             {/* Like */}
             <button
               onClick={handleLike}
@@ -226,31 +230,8 @@ const Watch = () => {
               <RiShareForwardLine size={18} /> Share
             </button>
 
-            {/* Save */}
-            <button
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "6px",
-                padding: "8px 16px",
-                borderRadius: "20px",
-                border: "none",
-                cursor: "pointer",
-                fontSize: "14px",
-                fontWeight: 500,
-                backgroundColor: "#272727",
-                color: "#f1f1f1",
-                fontFamily: "Roboto, sans-serif",
-              }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.backgroundColor = "#3d3d3d")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.backgroundColor = "#272727")
-              }
-            >
-              <MdOutlinePlaylistAdd size={18} /> Save
-            </button>
+            {/* Save to Playlist */}
+            <SaveToPlaylist videoId={videoId} />
 
             {/* More */}
             <button
@@ -418,11 +399,7 @@ const Watch = () => {
                 .map((v) => (
                   <div
                     key={v._id}
-                    style={{
-                      display: "flex",
-                      gap: "8px",
-                      cursor: "pointer",
-                    }}
+                    style={{ display: "flex", gap: "8px", cursor: "pointer" }}
                   >
                     {/* Thumbnail */}
                     <Link
