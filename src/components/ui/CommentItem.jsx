@@ -1,11 +1,20 @@
 import { useState } from "react";
 import { format } from "timeago.js";
+import { MdDeleteOutline } from "react-icons/md";
 import toast from "react-hot-toast";
 
 const CommentItem = ({ comment, onDelete }) => {
   const [deleting, setDeleting] = useState(false);
+  const [hovered, setHovered] = useState(false);
+
   const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
-  const isOwner = currentUser?._id === comment?.owner?._id;
+  const isOwner =
+    currentUser?._id === comment?.owner?._id ||
+    currentUser?.username === comment?.owner?.username;
+
+  const ownerName =
+    comment?.owner?.username || comment?.owner?.fullName || "User";
+  const ownerAvatar = comment?.owner?.avatar;
 
   const handleDelete = async () => {
     try {
@@ -19,12 +28,12 @@ const CommentItem = ({ comment, onDelete }) => {
     }
   };
 
-  const ownerName =
-    comment?.owner?.username || comment?.owner?.fullName || "User";
-  const ownerAvatar = comment?.owner?.avatar;
-
   return (
-    <div style={{ display: "flex", gap: "12px" }} className="group">
+    <div
+      style={{ display: "flex", gap: "12px" }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
       {/* Avatar */}
       <div
         style={{
@@ -60,21 +69,29 @@ const CommentItem = ({ comment, onDelete }) => {
             alignItems: "center",
             gap: "8px",
             marginBottom: "4px",
+            flexWrap: "wrap",
           }}
         >
           <span style={{ color: "#f1f1f1", fontSize: "13px", fontWeight: 500 }}>
-            {ownerName}
+            @{ownerName}
           </span>
           <span style={{ color: "#717171", fontSize: "12px" }}>
             {format(comment?.createdAt)}
           </span>
         </div>
-        <p style={{ color: "#f1f1f1", fontSize: "14px", lineHeight: "20px" }}>
+        <p
+          style={{
+            color: "#f1f1f1",
+            fontSize: "14px",
+            lineHeight: "20px",
+            wordBreak: "break-word",
+          }}
+        >
           {comment?.content}
         </p>
       </div>
 
-      {/* Delete */}
+      {/* Delete button */}
       {isOwner && (
         <button
           onClick={handleDelete}
@@ -86,21 +103,19 @@ const CommentItem = ({ comment, onDelete }) => {
             color: "#717171",
             padding: "4px",
             borderRadius: "50%",
-            opacity: 0,
-            transition: "opacity 0.15s",
             display: "flex",
             alignItems: "center",
+            opacity: hovered ? 1 : 0,
+            transition: "all 0.15s",
+            flexShrink: 0,
+            alignSelf: "flex-start",
+            marginTop: "2px",
           }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.opacity = "1";
-            e.currentTarget.style.color = "#ff4444";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.opacity = "0";
-            e.currentTarget.style.color = "#717171";
-          }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = "#ff4444")}
+          onMouseLeave={(e) => (e.currentTarget.style.color = "#717171")}
+          title="Delete comment"
         >
-          🗑
+          {deleting ? "..." : <MdDeleteOutline size={18} />}
         </button>
       )}
     </div>
