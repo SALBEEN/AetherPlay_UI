@@ -353,6 +353,7 @@ const Watch = () => {
             channelId={video?.owner?._id}
             initialSubscribed={isSubscribed}
             subscriberCount={subscriberCount}
+            channel={video?.owner}
             onSubscribeChange={(newSubbed, newCount) => {
               setIsSubscribed(newSubbed);
               setSubscriberCount(newCount);
