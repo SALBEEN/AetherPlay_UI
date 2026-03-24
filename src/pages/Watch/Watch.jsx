@@ -1,9 +1,10 @@
 import { useParams, Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { format } from "timeago.js";
 import { AiOutlineLike, AiFillLike } from "react-icons/ai";
 import { RiShareForwardLine } from "react-icons/ri";
 import { BiDotsVerticalRounded } from "react-icons/bi";
+import { useDispatch, useSelector } from "react-redux";
 import useVideo from "../../hooks/useVideo";
 import useVideos from "../../hooks/useVideos";
 import CommentSection from "../../components/ui/CommentSection";
@@ -11,31 +12,79 @@ import SubscribeButton from "../../components/ui/SubscribeButton";
 import SaveToPlaylist from "../../components/ui/SaveToPlaylist";
 import { VideoCardSkeleton } from "../../components/common/Skeleton";
 import { videoService } from "../../services/videoService";
+import { addToHistory, saveProgress } from "../../store/slices/historySlice";
 import toast from "react-hot-toast";
 import axiosInstance from "../../api/axiosInstance";
 
 const Watch = () => {
   const { videoId } = useParams();
+  const dispatch = useDispatch();
   const { video, loading, error } = useVideo(videoId);
   const { videos: related, loading: relatedLoading } = useVideos({ limit: 10 });
+  const savedProgress = useSelector(
+    (state) => state.history.progress[videoId] || 0,
+  );
+
   const [liked, setLiked] = useState(false);
   const [likeDelta, setLikeDelta] = useState(0);
   const [showFullDesc, setShowFullDesc] = useState(false);
   const [subscriberCount, setSubscriberCount] = useState(0);
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const videoRef = useRef(null);
+  const progressSaveInterval = useRef(null);
 
+  // Add to history + save backend
   useEffect(() => {
     if (videoId && localStorage.getItem("accessToken")) {
       axiosInstance.patch(`/users/history/${videoId}`).catch(() => {});
     }
   }, [videoId]);
 
+  // Add video to Redux history when loaded
   useEffect(() => {
     if (video) {
+      dispatch(addToHistory(video));
       setSubscriberCount(video?.owner?.subscribersCount || 0);
       setIsSubscribed(video?.isSubscribed || false);
     }
-  }, [video]);
+  }, [video, dispatch]);
+
+  // Restore saved progress when video loads
+  useEffect(() => {
+    if (videoRef.current && savedProgress > 0) {
+      videoRef.current.currentTime = savedProgress;
+    }
+  }, [savedProgress, video]);
+
+  // Save progress every 5 seconds
+  useEffect(() => {
+    progressSaveInterval.current = setInterval(() => {
+      if (videoRef.current && !videoRef.current.paused) {
+        dispatch(
+          saveProgress({
+            videoId,
+            seconds: Math.floor(videoRef.current.currentTime),
+          }),
+        );
+      }
+    }, 5000);
+
+    return () => clearInterval(progressSaveInterval.current);
+  }, [videoId, dispatch]);
+
+  // Save progress on unmount
+  useEffect(() => {
+    return () => {
+      if (videoRef.current) {
+        dispatch(
+          saveProgress({
+            videoId,
+            seconds: Math.floor(videoRef.current.currentTime),
+          }),
+        );
+      }
+    };
+  }, [videoId, dispatch]);
 
   const handleLike = async () => {
     const token = localStorage.getItem("accessToken");
@@ -77,8 +126,48 @@ const Watch = () => {
         alignItems: "flex-start",
       }}
     >
-      {/* LEFT — Main content */}
+      {/* LEFT */}
       <div style={{ flex: 1, minWidth: 0 }}>
+        {/* Resume banner */}
+        {savedProgress > 60 && !loading && (
+          <div
+            style={{
+              backgroundColor: "#1a1a1a",
+              border: "1px solid #3d3d3d",
+              borderRadius: "8px",
+              padding: "10px 16px",
+              marginBottom: "12px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <p style={{ color: "#aaaaaa", fontSize: "13px" }}>
+              Resume from {Math.floor(savedProgress / 60)}:
+              {String(Math.floor(savedProgress % 60)).padStart(2, "0")}
+            </p>
+            <button
+              onClick={() => {
+                if (videoRef.current)
+                  videoRef.current.currentTime = savedProgress;
+              }}
+              style={{
+                backgroundColor: "#f1f1f1",
+                color: "#0f0f0f",
+                border: "none",
+                borderRadius: "20px",
+                padding: "4px 12px",
+                fontSize: "12px",
+                fontWeight: 600,
+                cursor: "pointer",
+                fontFamily: "Roboto, sans-serif",
+              }}
+            >
+              Resume
+            </button>
+          </div>
+        )}
+
         {/* Video Player */}
         <div
           style={{
@@ -100,9 +189,9 @@ const Watch = () => {
             />
           ) : video?.videoFile ? (
             <video
+              ref={videoRef}
               src={video.videoFile}
               controls
-              autoPlay={false}
               style={{
                 width: "100%",
                 height: "100%",
@@ -110,6 +199,16 @@ const Watch = () => {
                 display: "block",
               }}
               onError={(e) => console.error("Video error:", e)}
+              onTimeUpdate={() => {
+                if (videoRef.current) {
+                  dispatch(
+                    saveProgress({
+                      videoId,
+                      seconds: Math.floor(videoRef.current.currentTime),
+                    }),
+                  );
+                }
+              }}
             >
               Your browser does not support the video tag.
             </video>
@@ -170,7 +269,6 @@ const Watch = () => {
             {video?.createdAt && ` • ${format(video.createdAt)}`}
           </p>
 
-          {/* Action Buttons */}
           <div
             style={{
               display: "flex",
@@ -179,7 +277,6 @@ const Watch = () => {
               alignItems: "center",
             }}
           >
-            {/* Like */}
             <button
               onClick={handleLike}
               style={{
@@ -209,7 +306,6 @@ const Watch = () => {
                 : "Like"}
             </button>
 
-            {/* Share */}
             <button
               onClick={() => {
                 navigator.clipboard.writeText(window.location.href);
@@ -239,10 +335,8 @@ const Watch = () => {
               <RiShareForwardLine size={18} /> Share
             </button>
 
-            {/* Save to Playlist */}
             <SaveToPlaylist videoId={videoId} />
 
-            {/* More */}
             <button
               style={{
                 display: "flex",
@@ -323,8 +417,6 @@ const Watch = () => {
                 )}
               </div>
             </Link>
-
-            {/* Channel name + subscriber count */}
             <div>
               <Link
                 to={`/channel/${video?.owner?.username}`}
@@ -348,7 +440,6 @@ const Watch = () => {
             </div>
           </div>
 
-          {/* Subscribe Button */}
           <SubscribeButton
             channelId={video?.owner?._id}
             initialSubscribed={isSubscribed}
@@ -403,7 +494,6 @@ const Watch = () => {
           </div>
         )}
 
-        {/* Comments */}
         <CommentSection videoId={videoId} />
       </div>
 
@@ -421,7 +511,6 @@ const Watch = () => {
                     key={v._id}
                     style={{ display: "flex", gap: "8px", cursor: "pointer" }}
                   >
-                    {/* Thumbnail */}
                     <Link
                       to={`/watch/${v._id}`}
                       style={{
@@ -454,8 +543,6 @@ const Watch = () => {
                         />
                       )}
                     </Link>
-
-                    {/* Info */}
                     <div style={{ flex: 1, minWidth: 0, paddingTop: "2px" }}>
                       <Link
                         to={`/watch/${v._id}`}
