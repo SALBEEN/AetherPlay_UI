@@ -7,11 +7,14 @@ import { VideoCardSkeleton } from "../../components/common/Skeleton";
 
 const Subscriptions = () => {
   const { isAuthenticated } = useSelector((state) => state.auth);
-  const { channels, loading } = useSelector((state) => state.subscriptions);
+  // const { channels, loading } = useSelector((state) => state.subscriptions);
   const [videos, setVideos] = useState([]);
   const [videosLoading, setVideosLoading] = useState(true);
   const [activeChannel, setActiveChannel] = useState("all");
   const [error, setError] = useState(null);
+  const { channels = [], loading = false } = useSelector(
+    (state) => state.subscriptions || {},
+  );
 
   useEffect(() => {
     fetchVideos();

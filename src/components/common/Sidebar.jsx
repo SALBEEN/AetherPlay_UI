@@ -37,12 +37,6 @@ const navItems = [
     to: "/history",
   },
   {
-    icon: <BsBookmark size={22} />,
-    activeIcon: <BsBookmarkFill size={22} />,
-    label: "Playlists",
-    to: "/library",
-  }, // ← changed from /playlist to /library
-  {
     icon: <BsCameraVideo size={22} />,
     activeIcon: <BsCameraVideoFill size={22} />,
     label: "Upload",
