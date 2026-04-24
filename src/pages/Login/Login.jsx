@@ -22,7 +22,10 @@ const Login = () => {
     try {
       setLoading(true);
       const res = await authService.login(form);
+
+      // ApiResponse wraps in .data, so res.data = { user, accessToken, refreshToken }
       const { accessToken, user } = res.data;
+
       localStorage.setItem("accessToken", accessToken);
       dispatch(setUser(user));
       toast.success(`Welcome back, ${user?.username}!`);

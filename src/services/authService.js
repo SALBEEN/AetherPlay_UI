@@ -14,7 +14,7 @@ export const authService = {
       email: data.username,
       password: data.password,
     });
-    return res.data;
+    return res.data; // this gives { statusCode, data: { user, accessToken, refreshToken }, message }
   },
 
   logout: async () => {
