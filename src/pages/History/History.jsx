@@ -41,6 +41,22 @@ const History = () => {
     toast.success("History cleared");
   };
 
+  const fetchHistory = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const res = await axiosInstance.get("/users/history");
+      console.log("History response:", res.data);
+      // Backend returns array directly
+      const list = res?.data?.data || [];
+      setHistory(Array.isArray(list) ? list : []);
+    } catch (err) {
+      setError(err?.response?.data?.message || "Failed to load history");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (!isAuthenticated) {
     return (
       <div style={{ textAlign: "center", paddingTop: "120px" }}>
