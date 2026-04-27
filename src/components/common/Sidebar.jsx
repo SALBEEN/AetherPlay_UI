@@ -54,20 +54,30 @@ const Sidebar = ({ isOpen, isMobile }) => {
   return (
     <aside
       style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: isOpen ? "stretch" : "center",
+
         position: "fixed",
         top: "56px",
-        left: 0,
+        left: "0",
         height: "calc(100vh - 56px)",
-        width: isOpen ? "240px" : isMobile ? "0" : "72px",
+        width: isMobile
+          ? isOpen
+            ? "240px"
+            : "0px" // mobile: fully hidden when closed
+          : isOpen
+            ? "240px"
+            : "75px", // desktop: icon-only when closed
         backgroundColor: "#0f0f0f",
         transition: "width 0.2s ease",
         zIndex: isMobile ? 90 : 40,
         overflowY: isOpen ? "auto" : "hidden",
         overflowX: "hidden",
-        borderRight: isOpen ? "1px solid #272727" : "none",
+        borderRight: "1px solid #272727",
       }}
     >
-      <nav style={{ padding: "12px 0", width: "240px" }}>
+      <nav style={{ padding: "12px 0", width: "100%" }}>
         {navItems.map((item) => (
           <NavLink key={item.to} to={item.to} end={item.to === "/"}>
             {({ isActive }) => (
@@ -160,5 +170,4 @@ const Sidebar = ({ isOpen, isMobile }) => {
     </aside>
   );
 };
-
 export default Sidebar;
