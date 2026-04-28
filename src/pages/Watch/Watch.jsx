@@ -15,6 +15,7 @@ import { videoService } from "../../services/videoService";
 import { addToHistory, saveProgress } from "../../store/slices/historySlice";
 import toast from "react-hot-toast";
 import axiosInstance from "../../api/axiosInstance";
+import VideoPlayer from "../../components/ui/VideoPlayer";
 
 const Watch = () => {
   const { videoId } = useParams();
@@ -169,6 +170,7 @@ const Watch = () => {
         )}
 
         {/* Video Player */}
+        {/* Video Player */}
         <div
           style={{
             width: "100%",
@@ -188,30 +190,12 @@ const Watch = () => {
               }}
             />
           ) : video?.videoFile ? (
-            <video
-              ref={videoRef}
+            <VideoPlayer
               src={video.videoFile}
-              controls
-              style={{
-                width: "100%",
-                height: "100%",
-                backgroundColor: "#000",
-                display: "block",
-              }}
-              onError={(e) => console.error("Video error:", e)}
-              onTimeUpdate={() => {
-                if (videoRef.current) {
-                  dispatch(
-                    saveProgress({
-                      videoId,
-                      seconds: Math.floor(videoRef.current.currentTime),
-                    }),
-                  );
-                }
-              }}
-            >
-              Your browser does not support the video tag.
-            </video>
+              onPlay={startTracking}
+              onPause={stopTracking}
+              onEnded={stopTracking}
+            />
           ) : (
             <div
               style={{
