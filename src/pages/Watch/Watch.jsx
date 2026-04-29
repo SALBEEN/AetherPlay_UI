@@ -116,6 +116,23 @@ const Watch = () => {
       </div>
     );
 
+  const startTracking = () => {
+    progressSaveInterval.current = setInterval(() => {
+      if (videoRef.current) {
+        dispatch(
+          saveProgress({
+            videoId,
+            seconds: Math.floor(videoRef.current.currentTime),
+          }),
+        );
+      }
+    }, 5000);
+  };
+
+  const stopTracking = () => {
+    clearInterval(progressSaveInterval.current);
+  };
+
   return (
     <div
       style={{
@@ -169,7 +186,6 @@ const Watch = () => {
           </div>
         )}
 
-        {/* Video Player */}
         {/* Video Player */}
         <div
           style={{
